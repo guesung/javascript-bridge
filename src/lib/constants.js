@@ -6,8 +6,6 @@ const INPUT_MESSAGE = {
 
 const OUTPUT_MESSAGE = {
   start: '다리 건너기 게임을 시작합니다.\n',
-  ex2: () => `\n결과: `,
-  ex3: () => `\n결과: `,
 };
 
 const MOVING = {
@@ -18,6 +16,12 @@ const MOVING = {
 const GAME_COMMAND = {
   retry: 'R',
   quit: 'Q',
+};
+
+const MATCH = {
+  correct: 'O',
+  inCorrect: 'X',
+  none: ' ',
 };
 
 const ERROR_MESSAGE_DEFAULT = '[ERROR]';
@@ -36,4 +40,5 @@ module.exports = {
   ERROR_MESSAGE,
   MOVING,
   GAME_COMMAND,
+  MATCH,
 };

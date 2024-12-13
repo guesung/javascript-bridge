@@ -28,19 +28,20 @@ class App {
 
       this.#bridgeGame.move(moving);
 
-      OutputView.printMap(this.#bridgeGame.getMatchedResult());
+      const matchResult = this.#bridgeGame.getMatchedResult();
 
-      if (this.#bridgeGame.checkFinished()) {
-        if (this.#bridgeGame.checkSuccess()) {
-          OutputView.printResult(this.#bridgeGame.getMatchedResult(), true, this.#bridgeGame.tryCount);
+      OutputView.printMap(matchResult);
+
+      if (!this.#bridgeGame.checkFinished()) continue;
+      if (this.#bridgeGame.checkSuccess()) {
+        OutputView.printResult(matchResult, true, this.#bridgeGame.tryCount);
+        this.#isDone = true;
+      } else {
+        const isRetry = await InputView.readGameCommand();
+        if (isRetry) this.#bridgeGame.retry();
+        else {
+          OutputView.printResult(matchResult, false, this.#bridgeGame.tryCount);
           this.#isDone = true;
-        } else {
-          const isRetry = await InputView.readGameCommand();
-          if (isRetry) this.#bridgeGame.retry();
-          else {
-            OutputView.printResult(this.#bridgeGame.getMatchedResult(), false, this.#bridgeGame.tryCount);
-            this.#isDone = true;
-          }
         }
       }
     }

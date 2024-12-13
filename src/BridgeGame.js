@@ -1,3 +1,5 @@
+const { MOVING, MATCH } = require('./lib/constants.js');
+
 /**
  * 다리 건너기 게임을 관리하는 클래스
  */
@@ -7,8 +9,8 @@ class BridgeGame {
   #tryCount;
 
   constructor(bridge) {
-    this.#movedPositions = [];
     this.#bridge = bridge;
+    this.#movedPositions = [];
     this.#tryCount = 1;
   }
 
@@ -32,26 +34,22 @@ class BridgeGame {
   checkSuccess() {
     const { upMatch, downMatch } = this.getMatchedResult();
 
-    return upMatch.every((it) => it !== 'X') && downMatch.every((it) => it !== 'X');
+    return upMatch.every((it) => it !== MATCH.inCorrect) && downMatch.every((it) => it !== MATCH.inCorrect);
   }
 
   getMatchedResult() {
-    const upMatch = this.#movedPositions.map((position, index) => {
-      if (position === 'D') return ' ';
-      if (this.#bridge[index] === 'U') return 'O';
-      return 'X';
-    });
-
-    const downMatch = this.#movedPositions.map((position, index) => {
-      if (position === 'U') return ' ';
-      if (this.#bridge[index] === 'D') return 'O';
-      return 'X';
-    });
-
     return {
-      upMatch,
-      downMatch,
+      upMatch: this.#getMatch(MOVING.up),
+      downMatch: this.#getMatch(MOVING.down),
     };
+  }
+
+  #getMatch(moving) {
+    return this.#movedPositions.map((position, index) => {
+      if (position !== moving) return MATCH.none;
+      if (this.#bridge[index] === moving) return MATCH.correct;
+      return MATCH.inCorrect;
+    });
   }
 
   /**
