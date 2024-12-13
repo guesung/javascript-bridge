@@ -1,61 +1,35 @@
-import { MissionUtils } from '@woowacourse/mission-utils';
+const { Console } = require('@woowacourse/mission-utils');
+const { INPUT_MESSAGE } = require('../lib/constants.js');
 
-import { InputParser, InputValidator } from '../helpers/index.js';
-import { INPUT_MESSAGE } from '../lib/constants.js';
-import { retryUntilSuccess } from '../lib/utils.js';
+/**
+ * 사용자로부터 입력을 받는 역할을 한다.
+ */
+const InputView = {
+  /**
+   * 다리의 길이를 입력받는다.
+   */
+  async readBridgeSize() {
+    const rawBridgeSize = await Console.readLineAsync(INPUT_MESSAGE.bridgeSize);
+    const bridgeSize = Number(rawBridgeSize);
+    return bridgeSize;
+  },
 
-export default class InputView {
-  static async readBridgeLength() {
-    return retryUntilSuccess(async () => {
-      const rawBridgeLength = await this.#readLineAsync(INPUT_MESSAGE.bridgeLength());
-      const bridgeLength = InputParser.parseBridgeLength(rawBridgeLength);
-      InputValidator.validateBridgeLength(bridgeLength);
+  /**
+   * 사용자가 이동할 칸을 입력받는다.
+   */
+  async readMoving() {
+    const moving = await Console.readLineAsync(INPUT_MESSAGE.move);
+    return moving;
+  },
 
-      return bridgeLength;
-    });
-  }
+  /**
+   * 사용자가 게임을 다시 시도할지 종료할지 여부를 입력받는다.
+   */
+  async readGameCommand() {
+    const rawRetry = await Console.readLineAsync(INPUT_MESSAGE.retry);
+    const retry = rawRetry === 'R';
+    return retry;
+  },
+};
 
-  static async readExample2() {
-    return retryUntilSuccess(async () => {
-      const rawExample2 = await this.#readLineAsync(INPUT_MESSAGE.example2());
-      const example2 = InputParser.parseExample2(rawExample2);
-      InputValidator.validateExample2(example2);
-
-      return example2;
-    });
-  }
-
-  static async readExample3() {
-    return retryUntilSuccess(async () => {
-      const rawExample3 = await this.#readLineAsync(INPUT_MESSAGE.example3());
-      const example3 = InputParser.parseExample3(rawExample3);
-      InputValidator.validateExample3(example3);
-
-      return example3;
-    });
-  }
-
-  static async readExample4() {
-    return retryUntilSuccess(async () => {
-      const rawExample4 = await this.#readLineAsync(INPUT_MESSAGE.example4());
-      const example4 = InputParser.parseExample4(rawExample4);
-      InputValidator.validateExample4(example4);
-
-      return example4;
-    });
-  }
-
-  static async readExample5() {
-    return retryUntilSuccess(async () => {
-      const rawExample5 = await this.#readLineAsync(INPUT_MESSAGE.example5());
-      const example5 = InputParser.parseExample5(rawExample5);
-      InputValidator.validateExample5(example5);
-
-      return example5;
-    });
-  }
-
-  static #readLineAsync(message) {
-    return MissionUtils.Console.readLineAsync(message);
-  }
-}
+module.exports = InputView;

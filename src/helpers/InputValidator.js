@@ -1,8 +1,8 @@
 import { ERROR_MESSAGE } from '../lib/constants.js';
 
 export default class InputValidator {
-  static validateBridgeLength(bridgeLength) {
-    this.#validate(bridgeLength);
+  static validateBridgeSize(bridgeSize) {
+    this.#validate(bridgeSize);
   }
 
   static validateExample2(example2) {

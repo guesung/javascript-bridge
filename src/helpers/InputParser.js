@@ -1,7 +1,7 @@
 export default class InputParser {
-  static parseBridgeLength(rawBridgeLength) {
-    const bridgeLength = rawBridgeLength;
-    return bridgeLength;
+  static parseBridgeSize(rawBridgeSize) {
+    const bridgeSize = rawBridgeSize;
+    return bridgeSize;
   }
 
   static parseExample2(rawExample2) {
