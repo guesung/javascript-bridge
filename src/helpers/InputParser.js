@@ -1,6 +1,6 @@
-export default class InputParser {
+class InputParser {
   static parseBridgeSize(rawBridgeSize) {
-    const bridgeSize = rawBridgeSize;
+    const bridgeSize = Number(rawBridgeSize);
     return bridgeSize;
   }
 
@@ -24,3 +24,5 @@ export default class InputParser {
     return example5;
   }
 }
+
+module.exports = InputParser;

@@ -21,13 +21,13 @@ class App {
 
       if (bridgeGame.checkFinished()) {
         if (bridgeGame.checkSuccess()) {
-          OutputView.printResult(true, bridgeGame.tryCount);
+          OutputView.printResult(bridgeGame.getMatchedResult(), true, bridgeGame.tryCount);
           break;
         } else {
-          const retry = await InputView.readGameCommand();
-          if (retry) bridgeGame.retry();
+          const isRetry = await InputView.readGameCommand();
+          if (isRetry) bridgeGame.retry();
           else {
-            OutputView.printResult(false, bridgeGame.tryCount);
+            OutputView.printResult(bridgeGame.getMatchedResult(), false, bridgeGame.tryCount);
             break;
           }
         }

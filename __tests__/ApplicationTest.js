@@ -2,15 +2,14 @@ const MissionUtils = require('@woowacourse/mission-utils');
 const App = require('../src/App');
 const BridgeMaker = require('../src/BridgeMaker');
 
-const mockQuestions = (answers) => {
-  MissionUtils.Console.readLine = jest.fn();
-  answers.reduce(
-    (acc, input) =>
-      acc.mockImplementationOnce((_, callback) => {
-        callback(input);
-      }),
-    MissionUtils.Console.readLine,
-  );
+const mockQuestions = (inputs) => {
+  MissionUtils.Console.readLineAsync = jest.fn();
+
+  MissionUtils.Console.readLineAsync.mockImplementation(() => {
+    const input = inputs.shift();
+
+    return Promise.resolve(input);
+  });
 };
 
 const mockRandoms = (numbers) => {
@@ -26,20 +25,20 @@ const getLogSpy = () => {
 
 const getOutput = (logSpy) => [...logSpy.mock.calls].join('');
 
-const runException = (inputs) => {
-  mockQuestions(inputs);
-  const logSpy = getLogSpy();
-  const app = new App();
-
-  app.play();
-
-  expectLogContains(getOutput(logSpy), ['[ERROR]']);
-};
-
 const expectLogContains = (received, logs) => {
   logs.forEach((log) => {
     expect(received).toEqual(expect.stringContaining(log));
   });
+};
+
+const runException = async (inputs) => {
+  mockQuestions(inputs);
+  const logSpy = getLogSpy();
+  const app = new App();
+
+  await app.play();
+
+  expectLogContains(getOutput(logSpy), ['[ERROR]']);
 };
 
 const expectBridgeOrder = (received, upside, downside) => {
@@ -58,13 +57,13 @@ describe('다리 건너기 테스트', () => {
     expect(bridge).toEqual(['U', 'D', 'D']);
   });
 
-  test('기능 테스트', () => {
+  test('기능 테스트', async () => {
     const logSpy = getLogSpy();
     mockRandoms(['1', '0', '1']);
     mockQuestions(['3', 'U', 'D', 'U']);
 
     const app = new App();
-    app.play();
+    await app.play();
 
     const log = getOutput(logSpy);
     expectLogContains(log, [
@@ -77,7 +76,7 @@ describe('다리 건너기 테스트', () => {
     expectBridgeOrder(log, '[ O |   | O ]', '[   | O |   ]');
   });
 
-  test('예외 테스트', () => {
-    runException(['a']);
+  test('예외 테스트', async () => {
+    await runException(['a']);
   });
 });
