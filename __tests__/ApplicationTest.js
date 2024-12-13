@@ -58,6 +58,7 @@ describe('다리 건너기 테스트', () => {
     const bridge = BridgeMaker.makeBridge(3, mockGenerator);
     expect(bridge).toEqual(['U', 'D', 'D']);
   });
+
   test('기능 테스트', async () => {
     const logSpy = getLogSpy();
     mockRandoms(['1', '0', '1']);

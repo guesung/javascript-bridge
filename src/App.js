@@ -6,29 +6,40 @@ const InputView = require('./views/InputView.js');
 const OutputView = require('./views/OutputView.js');
 
 class App {
+  #isDone;
+  #bridgeGame;
+
+  constructor() {
+    this.#isDone = false;
+  }
+
   async play() {
     OutputView.printStart();
     const bridgeSize = await InputView.readBridgeSize();
     const bridge = BridgeMaker.makeBridge(bridgeSize, BridgeRandomNumberGenerator.generate);
-    const bridgeGame = new BridgeGame(bridge);
+    this.#bridgeGame = new BridgeGame(bridge);
 
-    while (1) {
+    await this.#start();
+  }
+
+  async #start() {
+    while (!this.#isDone) {
       const moving = await InputView.readMoving();
 
-      bridgeGame.move(moving);
+      this.#bridgeGame.move(moving);
 
-      OutputView.printMap(bridgeGame.getMatchedResult());
+      OutputView.printMap(this.#bridgeGame.getMatchedResult());
 
-      if (bridgeGame.checkFinished()) {
-        if (bridgeGame.checkSuccess()) {
-          OutputView.printResult(bridgeGame.getMatchedResult(), true, bridgeGame.tryCount);
-          break;
+      if (this.#bridgeGame.checkFinished()) {
+        if (this.#bridgeGame.checkSuccess()) {
+          OutputView.printResult(this.#bridgeGame.getMatchedResult(), true, this.#bridgeGame.tryCount);
+          this.#isDone = true;
         } else {
           const isRetry = await InputView.readGameCommand();
-          if (isRetry) bridgeGame.retry();
+          if (isRetry) this.#bridgeGame.retry();
           else {
-            OutputView.printResult(bridgeGame.getMatchedResult(), false, bridgeGame.tryCount);
-            break;
+            OutputView.printResult(this.#bridgeGame.getMatchedResult(), false, this.#bridgeGame.tryCount);
+            this.#isDone = true;
           }
         }
       }
