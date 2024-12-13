@@ -19,10 +19,10 @@ class App {
     const bridge = BridgeMaker.makeBridge(bridgeSize, BridgeRandomNumberGenerator.generate);
     this.#bridgeGame = new BridgeGame(bridge);
 
-    await this.#start();
+    await this.#startGame();
   }
 
-  async #start() {
+  async #startGame() {
     while (!this.#isDone) {
       const moving = await InputView.readMoving();
 
@@ -38,6 +38,7 @@ class App {
         this.#isDone = true;
       } else {
         const isRetry = await InputView.readGameCommand();
+
         if (isRetry) this.#bridgeGame.retry();
         else {
           OutputView.printResult(matchResult, false, this.#bridgeGame.tryCount);
